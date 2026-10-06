@@ -1,0 +1,39 @@
+{
+    "dataset_name": "CWRU Bearing Vibration Dataset (Simulated & Hybrid)",
+    "source": "Case Western Reserve University Bearing Data Center (Simulation conforme)",
+    "sampling_frequency_hz": 12000,
+    "motor_speed_rpm": 1797,
+    "rotation_frequency_hz": 29.95,
+    "characteristic_frequencies_hz": {
+        "BPFI_inner_race": 162.19,
+        "BPFO_outer_race": 107.36,
+        "BSF_ball": 70.59,
+        "FTF_cage": 11.92
+    },
+    "total_samples_per_class": 120000,
+    "classes": [
+        "Normal",
+        "InnerRace_007",
+        "InnerRace_014",
+        "InnerRace_021",
+        "OuterRace_007",
+        "OuterRace_014",
+        "OuterRace_021",
+        "Ball_007",
+        "Ball_014",
+        "Ball_021"
+    ],
+    "columns": [
+        "time_s",
+        "vibration_acc",
+        "label",
+        "fault_type",
+        "severity",
+        "is_anomaly"
+    ],
+    "limitations": [
+        "Donnees simulees basees sur les equations physiques analytiques de CWRU.",
+        "Signal mono-axe d'acceleration (Drive End).",
+        "Ideal pour l'experimentation Edge AI et le prototypage rapide sur Raspberry Pi."
+    ]
+}

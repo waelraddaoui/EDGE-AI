@@ -1,0 +1,236 @@
+/* ============================================================
+   EDGE AI DASHBOARD — CSS THEME SYSTEM
+   Themes: dark (default) | light
+   Usage: set data-theme="light" on <html> to switch
+   ============================================================ */
+
+/* ── DARK THEME (default) ─────────────────────────────────── */
+:root,
+[data-theme="dark"] {
+  --bg-color:       #0F172A;
+  --bg-gradient:    radial-gradient(circle at top left, #1e293b, #0f172a);
+  --card-bg:        rgba(30, 41, 59, 0.75);
+  --card-border:    rgba(255, 255, 255, 0.10);
+  --card-shadow:    0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --card-shadow-h:  0 12px 40px 0 rgba(0, 0, 0, 0.45);
+  --text-main:      #F8FAFC;
+  --text-muted:     #94A3B8;
+  --text-h:         #ffffff;
+  --scrollbar-track:#0F172A;
+  --scrollbar-thumb:#334155;
+  --scrollbar-hover:#475569;
+  --grid-stroke:    #334155;
+  --tooltip-bg:     #1E293B;
+  --tooltip-border: #334155;
+  --input-bg:       rgba(15, 23, 42, 0.6);
+  --input-border:   rgba(255,255,255,0.12);
+  --chat-user-bg:   rgba(59, 130, 246, 0.2);
+  --chat-bot-bg:    rgba(255,255,255,0.05);
+  --metric-val:     #ffffff;
+
+  --neon-green:  #10B981;
+  --neon-red:    #EF4444;
+  --neon-blue:   #3B82F6;
+  --neon-purple: #8B5CF6;
+
+  /* Toggle button */
+  --toggle-bg:    rgba(255,255,255,0.08);
+  --toggle-color: #94A3B8;
+
+  color-scheme: dark;
+}
+
+/* ── LIGHT THEME ──────────────────────────────────────────── */
+[data-theme="light"] {
+  --bg-color:       #F0F4F8;
+  --bg-gradient:    radial-gradient(circle at top left, #dbeafe, #f0f4f8);
+  --card-bg:        rgba(255, 255, 255, 0.82);
+  --card-border:    rgba(59, 130, 246, 0.18);
+  --card-shadow:    0 4px 24px 0 rgba(59, 130, 246, 0.10);
+  --card-shadow-h:  0 8px 32px 0 rgba(59, 130, 246, 0.20);
+  --text-main:      #1E293B;
+  --text-muted:     #64748B;
+  --text-h:         #0F172A;
+  --scrollbar-track:#E2E8F0;
+  --scrollbar-thumb:#94A3B8;
+  --scrollbar-hover:#64748B;
+  --grid-stroke:    #CBD5E1;
+  --tooltip-bg:     #FFFFFF;
+  --tooltip-border: #CBD5E1;
+  --input-bg:       rgba(241, 245, 249, 0.9);
+  --input-border:   rgba(59,130,246,0.25);
+  --chat-user-bg:   rgba(59, 130, 246, 0.12);
+  --chat-bot-bg:    rgba(241, 245, 249, 0.8);
+  --metric-val:     #0F172A;
+
+  --neon-green:  #059669;
+  --neon-red:    #DC2626;
+  --neon-blue:   #2563EB;
+  --neon-purple: #7C3AED;
+
+  --toggle-bg:    rgba(59,130,246,0.10);
+  --toggle-color: #2563EB;
+
+  color-scheme: light;
+}
+
+/* ── BASE ─────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  font-family: 'Inter', 'Roboto', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: var(--text-main);
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  transition: background 0.4s ease, color 0.3s ease;
+}
+
+/* ── GLASSMORPHISM CARD ───────────────────────────────────── */
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.glass-panel:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-h);
+}
+
+/* ── SCROLLBAR ────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track  { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb  { background: var(--scrollbar-thumb); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-hover); }
+
+/* ── ANIMATIONS ───────────────────────────────────────────── */
+@keyframes pulse-glow-red {
+  0%   { box-shadow: 0 0 0 0   rgba(239, 68, 68, 0.4); }
+  70%  { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0   rgba(239, 68, 68, 0); }
+}
+
+@keyframes pulse-glow-green {
+  0%   { box-shadow: 0 0 0 0   rgba(16, 185, 129, 0.4); }
+  70%  { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0   rgba(16, 185, 129, 0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.65; }
+}
+
+@keyframes theme-fade {
+  from { opacity: 0.7; }
+  to   { opacity: 1; }
+}
+
+.status-indicator.anomaly {
+  animation: pulse-glow-red 2s infinite;
+  background-color: var(--neon-red);
+}
+
+.status-indicator.normal {
+  animation: pulse-glow-green 2s infinite;
+  background-color: var(--neon-green);
+}
+
+/* ── LAYOUT ───────────────────────────────────────────────── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  animation: theme-fade 0.3s ease;
+}
+
+.col-span-12 { grid-column: span 12; }
+.col-span-8  { grid-column: span 8;  }
+.col-span-4  { grid-column: span 4;  }
+.col-span-6  { grid-column: span 6;  }
+.col-span-3  { grid-column: span 3;  }
+
+@media (max-width: 1024px) {
+  .col-span-8, .col-span-4, .col-span-6, .col-span-3 {
+    grid-column: span 12;
+  }
+}
+
+/* ── TYPOGRAPHY ───────────────────────────────────────────── */
+h1, h2, h3 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-h);
+  letter-spacing: -0.025em;
+  transition: color 0.3s ease;
+}
+
+.text-gradient {
+  background: linear-gradient(to right, var(--neon-blue), var(--neon-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.metric-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--metric-val);
+  transition: color 0.3s ease;
+}
+
+.metric-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: color 0.3s ease;
+}
+
+/* ── THEME TOGGLE BUTTON ──────────────────────────────────── */
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--card-border);
+  background: var(--toggle-bg);
+  color: var(--toggle-color);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--neon-blue);
+  color: #fff;
+  border-color: var(--neon-blue);
+  transform: scale(1.05);
+}

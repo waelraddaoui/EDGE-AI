@@ -1,0 +1,608 @@
+DOCUMENT À TRANSMETTRE À L’ÉTUDIANT
+Mail d’encadrement et guide de réorganisation
+État de l’art scientifique — Edge AI, XAI et agent IA/RAG
+
+Objet
+Réorienter le travail de l’étudiant vers la collecte, la comparaison et la synthèse bibliographique
+Résultat attendu
+Tableaux de références, méthodes, résultats, limites, gaps et décisions
+Rédaction finale
+Assurée ultérieurement par l’encadrante
+Niveau visé
+Préparation d’un état de l’art pour un article scientifique de revue Q1
+
+Partie A — Mail à envoyer à l’étudiant
+Objet : Réorganisation du travail bibliographique pour l’état de l’art
+Bonjour,
+Merci pour le travail réalisé. Tu as correctement identifié les principaux axes du sujet : détection d’anomalies industrielles, modèles Edge AI, déploiement sur Raspberry Pi, explicabilité et agent IA/RAG.
+Toutefois, je ne te demande pas de rédiger l’état de l’art final de l’article. La rédaction scientifique sera réalisée ultérieurement par mes soins. Ton travail doit désormais être réorganisé afin de me fournir une base bibliographique complète, vérifiée et directement exploitable pour la rédaction.
+L’objectif n’est donc plus de produire des paragraphes généraux sur les technologies existantes. Pour chaque sous-thème, tu dois identifier les publications pertinentes, extraire les informations utiles, comparer les approches dans des tableaux, relever les résultats obtenus, les limites méthodologiques, les informations non rapportées et les gaps scientifiques potentiels.
+L’ensemble du travail doit permettre de répondre à la question suivante :
+Question centrale. Dans quelle mesure les approches existantes permettent-elles de concevoir un système de détection d’anomalies industrielles léger, robuste et explicable, réellement déployable sur Raspberry Pi, et comment un agent IA/RAG peut-il transformer les prédictions et les résultats XAI en un diagnostic contextualisé, traçable et techniquement fiable ?
+
+Le document doit être réorganisé selon les sous-thèmes suivants :
+Datasets et cas industriels.
+Prétraitement et représentation des signaux.
+Modèles légers de détection d’anomalies.
+Déploiement Edge sur Raspberry Pi.
+Benchmark resource-aware.
+Robustesse et généralisation.
+Explicabilité des décisions.
+Agent IA/RAG pour le diagnostic industriel.
+Synthèse des gaps scientifiques.
+Matrice gaps–contributions.
+Pour chaque sous-thème, tu dois produire un tableau comparatif comprenant les références, les méthodes, les datasets, les protocoles, les métriques, les résultats, les limites et les informations non rapportées. Après chaque tableau, ajoute une fiche de synthèse courte indiquant les approches dominantes, les résultats comparables ou non comparables, les limites communes, le gap potentiel et la décision utile pour notre projet.
+Chaque référence doit être vérifiée et présentée au format IEEE. Les mentions générales telles que « ResearchGate », « MDPI 2025 », « Springer survey » ou « une étude récente » ne sont pas acceptées. Lorsqu’une information n’est pas disponible dans l’article, écris explicitement : « Non rapporté dans la publication ».
+Je joins à ce mail un guide détaillé précisant les tableaux à construire, les colonnes attendues, les résultats à fournir et les règles à respecter.
+Ton livrable final doit me permettre de rédiger l’état de l’art sans avoir à reprendre chaque article individuellement. Il doit donc être structuré, fiable, complet et orienté comparaison scientifique.
+Bien cordialement,
+Amina Rouis
+
+Partie B — Guide détaillé de réorganisation du travail
+1. Mission exacte de l’étudiant
+L’étudiant ne doit pas rédiger l’état de l’art final. Sa mission consiste à construire la base scientifique qui permettra sa rédaction. Il doit collecter, vérifier, classer et comparer les publications, puis produire des résultats bibliographiques synthétiques.
+Travail demandé
+Travail non demandé
+Identifier des références fiables
+Rédiger des paragraphes scientifiques longs
+Extraire les méthodes, données, métriques et résultats
+Inventer des transitions ou une nouveauté
+Comparer les travaux dans des tableaux
+Présenter les outils logiciels comme contributions
+Identifier les limites et informations absentes
+Compléter les données manquantes par estimation
+Proposer des gaps potentiels appuyés par plusieurs sources
+Affirmer un gap sans preuve bibliographique
+Formuler les décisions utiles au protocole
+Décider seul de la contribution finale
+
+2. Livrables obligatoires
+Un fichier Excel structuré par sous-thème.
+Une bibliographie complète et vérifiée au format IEEE.
+Les PDF des articles classés par dossier.
+Un tableau comparatif pour chaque sous-section.
+Une fiche de synthèse après chaque tableau.
+Un tableau global des gaps scientifiques.
+Une matrice gaps–contributions.
+Un tableau final des décisions méthodologiques.
+Une liste des informations non rapportées dans la littérature.
+Une liste des références restant à vérifier.
+3. Organisation du fichier Excel
+Feuille
+Contenu
+1. Sources
+Métadonnées, DOI, type de publication, évaluation par les pairs, lien officiel
+2. Datasets
+Cas industriels, signaux, labels, limites, compatibilité Edge/XAI
+3. Prétraitement
+Fenêtrage, features, normalisation, data leakage
+4. Modèles
+Modèles légers, métriques, complexité, limites
+5. Déploiement Edge
+Raspberry Pi, runtime, format, optimisation, reproductibilité
+6. Benchmark
+Latence, RAM, CPU, taille, débit et protocole de mesure
+7. Robustesse
+Bruit, dérive, données manquantes, domain shift
+8. XAI
+Méthodes, portée, fidélité, stabilité et interprétation
+9. RAG
+Corpus, retrieval, agent, grounding, hallucinations
+10. Gaps
+Lacunes, preuves, conséquences et réponse possible
+11. Gaps–contributions
+Correspondance entre lacunes et expérimentations
+12. Références IEEE
+Bibliographie finale normalisée
+
+4. Sous-section 1 — Datasets et cas industriels
+Question à traiter. Quels datasets publics sont adaptés à la détection d’anomalies industrielles, au déploiement sur Raspberry Pi, à l’analyse XAI et aux tests de robustesse ?
+
+Référence
+Dataset
+Cas industriel
+Signal
+Variables
+Fréquence
+Labels
+Taille
+Conditions
+Tâche
+Avantages
+Limites
+Data leakage
+Edge
+XAI
+Robustesse
+[n]
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+
+Datasets à examiner au minimum : CWRU, Paderborn, IMS, XJTU-SY, MFPT, MIMII, NASA C-MAPSS et, à titre comparatif, SWaT/WADI.
+Résultat attendu : dataset principal recommandé, dataset de secours, justification scientifique, limites, précautions de split et scénarios de robustesse possibles.
+5. Sous-section 2 — Prétraitement et représentation des signaux
+Question à traiter. Quelles stratégies de préparation des signaux permettent d’obtenir une détection fiable tout en réduisant le coût de calcul sur une plateforme Edge ?
+
+Référence
+Dataset
+Signal
+Nettoyage
+Normalisation
+Fenêtre
+Recouvrement
+Segmentation
+Features temporelles
+Features statistiques
+Features fréquentielles
+Signal brut
+Réduction
+Prévention fuite
+Impact
+Limites
+[n]
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+
+Caractéristiques à rechercher : moyenne, variance, écart-type, RMS, skewness, kurtosis, facteur de crête, énergie, fréquence dominante, énergie spectrale, entropie et ondelettes lorsque justifiées.
+Résultat attendu : stratégie de fenêtrage, features pertinentes, effet du recouvrement, risques de fuite, approches les plus légères et protocole recommandé.
+6. Sous-section 3 — Modèles légers de détection d’anomalies
+Question à traiter. Quels modèles offrent le meilleur compromis entre qualité de détection, complexité, robustesse, explicabilité et coût embarqué ?
+
+Réf.
+Année
+Dataset
+Tâche
+Supervision
+Entrée
+Modèle
+Hyperparamètres
+Accuracy
+Precision
+Recall
+F1
+AUC
+Taille
+Paramètres
+Explicabilité
+Avantages
+Limites
+[n]
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+
+Modèles à comparer : Isolation Forest, Random Forest léger, XGBoost léger, autoencodeur compact, 1D-CNN léger et éventuellement One-Class SVM.
+Résultat attendu : modèles dominants, plus performants, plus légers, plus interprétables, résultats non comparables, limites communes et modèles à retenir.
+7. Sous-section 4 — Déploiement Edge sur Raspberry Pi
+Question à traiter. Comment les modèles existants sont-ils réellement déployés et exécutés sur des plateformes Edge, particulièrement Raspberry Pi 4 ou 5 ?
+
+Réf.
+Cas
+Modèle
+Matériel
+Version
+RAM
+OS
+Runtime
+Format
+Entraînement
+Inférence
+Entrée
+Batch
+Optimisation
+Quantification
+Logs
+Code
+Limites
+[n]
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+
+Distinguer clairement Raspberry Pi 4/5, microcontrôleurs, Jetson et serveurs Edge, ainsi que Python natif, joblib, ONNX Runtime et TensorFlow Lite.
+Résultat attendu : plateformes comparables, formats, optimisations, informations absentes, limites de reproductibilité et runtime recommandé.
+8. Sous-section 5 — Benchmark Edge AI resource-aware
+Question à traiter. Comment les travaux existants évaluent-ils simultanément la qualité de détection et la consommation de ressources ?
+
+Réf.
+Matériel
+Modèle
+Entrée
+Inférences
+Warm-up
+Outil
+Lat. moy.
+Médiane
+Max
+P95/P99
+Écart-type
+RAM
+CPU
+Taille
+Débit
+Énergie
+Métriques ML
+Limites
+[n]
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+
+Résultat attendu : métriques fréquemment rapportées, métriques absentes, protocoles reproductibles, latences non comparables et nécessité d’un benchmark commun.
+Gap potentiel à vérifier. Les travaux évaluent souvent la qualité de détection ou la latence, mais rarement l’ensemble F1–recall–latence–RAM–CPU–taille–débit dans un protocole unique.
+
+9. Sous-section 6 — Robustesse et généralisation
+Question à traiter. Dans quelle mesure les modèles restent-ils fiables lorsque les données sont bruitées, incomplètes ou différentes des conditions d’apprentissage ?
+
+Réf.
+Dataset
+Modèle
+Perturbation
+Niveau
+Référence
+Perf. initiale
+Perf. perturbée
+Perte abs.
+Perte rel.
+Recall
+Faux négatifs
+Mitigation
+Domain shift
+Limites
+[n]
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+
+Perturbations : bruit gaussien/impulsionnel, SNR, valeurs manquantes, blocs manquants, capteur bloqué, dérive, offset, pics, variation de charge/vitesse, changement de machine et déséquilibre.
+Résultat attendu : tests utilisés, perturbations rares, modèles stables, stratégies de mitigation et scénarios à intégrer.
+10. Sous-section 7 — Explicabilité des décisions
+Question à traiter. Quelles méthodes permettent d’expliquer les décisions d’un modèle de détection d’anomalies sur séries temporelles industrielles, et comment leur qualité est-elle évaluée ?
+
+Réf.
+Dataset
+Modèle
+Méthode XAI
+Intrinsèque/post-hoc
+Globale/locale
+Agnostique/spécifique
+Unité
+Feature
+Fenêtre
+Temps
+Fréquence
+Fidélité
+Stabilité
+Validation humaine
+Interprétation
+Limites
+[n]
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+
+Méthodes : feature importance, permutation importance, SHAP, LIME, méthodes temporelles, fenêtres critiques et analyse des faux positifs/faux négatifs.
+Résultat attendu : méthodes dominantes, adaptées aux séries temporelles, évaluées réellement, limites liées aux corrélations, distinction importance/causalité et méthodes retenues.
+Gap potentiel à vérifier. De nombreuses études produisent des graphiques d’importance, mais peu évaluent la fidélité, la stabilité et l’utilité technique des explications.
+
+11. Sous-section 8 — Agent IA/RAG pour le diagnostic industriel
+Question à traiter. Comment les systèmes RAG et les agents IA sont-ils utilisés pour contextualiser les résultats de détection et produire des diagnostics traçables ?
+
+Réf.
+Domaine
+Type
+Corpus
+Documents
+Chunking
+Embeddings
+Base
+Retrieval
+Reranking
+Agent
+Entrées ML
+Entrées XAI
+Sortie
+Citations
+Faithfulness
+Groundedness
+Hallucinations
+Validation
+Limites
+[n]
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+…
+
+Distinguer RAG classique, agent unique, agentic RAG, multi-agents, assistants techniques, génération de rapports, systèmes réellement fondés sur ML/XAI et simples chatbots.
+Résultat attendu : maturité du domaine, corpus, retrieval, citations, intégration ML/XAI, évaluation, risques d’hallucination et architecture minimale recommandée.
+Précaution. Le RAG reste une couche d’assistance. Il ne remplace pas le modèle de détection et ne confirme pas automatiquement la cause physique d’une anomalie.
+
+12. Fiche de synthèse obligatoire après chaque sous-section
+Élément
+Réponse attendue
+Nombre de publications analysées
+Nombre exact
+Approches dominantes
+Deux à quatre approches
+Meilleurs résultats
+Avec références et conditions
+Résultats non comparables
+Raison de la non-comparabilité
+Convergences
+Ce que plusieurs travaux confirment
+Contradictions
+Résultats ou conclusions opposés
+Informations souvent absentes
+Latence, RAM, split, etc.
+Limites communes
+Deux à cinq limites
+Gap potentiel
+Formulation provisoire
+Preuves du gap
+Références concernées
+Conséquence pour le projet
+Décision méthodologique
+Résultat retenu
+Dataset, modèle, méthode ou protocole recommandé
+
+13. Tableau global des gaps scientifiques
+Code
+Sous-thème
+Gap observé
+Références
+Nombre de travaux
+Importance
+Conséquence
+Réponse proposée
+Limite
+G1
+…
+…
+…
+…
+…
+…
+…
+…
+
+Un gap ne doit être retenu que s’il est confirmé par plusieurs publications.
+14. Matrice finale gaps–contributions
+Gap confirmé
+Preuve bibliographique
+Contribution envisagée
+Expérimentation
+Métriques
+Limite reconnue
+…
+…
+…
+…
+…
+…
+
+15. Tableau global des résultats bibliographiques
+Axe
+Résultat principal
+Approche dominante
+Limite principale
+Gap confirmé
+Décision pour le projet
+Dataset
+
+
+
+
+
+Prétraitement
+
+
+
+
+
+Modèles
+
+
+
+
+
+Déploiement Edge
+
+
+
+
+
+Benchmark
+
+
+
+
+
+Robustesse
+
+
+
+
+
+XAI
+
+
+
+
+
+RAG
+
+
+
+
+
+
+16. Exigences sur les références
+Champ
+Exigence
+Référence IEEE complète
+Obligatoire
+Titre exact
+Obligatoire
+Auteurs
+Obligatoire
+Année
+Obligatoire
+Revue ou conférence
+Obligatoire
+DOI
+Obligatoire lorsqu’il existe
+URL officielle
+Recommandée
+Type
+Article, survey, conférence ou prépublication
+Évaluation par les pairs
+Oui, non ou non vérifié
+PDF archivé
+Oui / non
+Sous-thème associé
+Obligatoire
+
+Sources non acceptées comme références finales. ResearchGate, Google Scholar ou Semantic Scholar peuvent servir à découvrir une publication, mais la référence finale doit renvoyer à l’éditeur, au DOI ou à la source officielle.
+
+17. Volume bibliographique indicatif
+Sous-thème
+Nombre indicatif de références pertinentes
+Datasets et cas industriels
+6 à 10
+Prétraitement et représentation
+8 à 12
+Modèles légers
+12 à 18
+Déploiement Raspberry Pi
+8 à 12
+Benchmark resource-aware
+8 à 12
+Robustesse
+6 à 10
+XAI industriel
+8 à 12
+RAG industriel
+Toutes les références vérifiables disponibles
+
+Le corpus final devrait viser environ 30 à 45 publications uniques de qualité, sans imposer artificiellement un nombre lorsque le domaine est encore émergent.
+18. Ce qui n’est pas demandé
+Rédiger l’état de l’art final.
+Produire des paragraphes longs.
+Inventer une transition ou une nouveauté.
+Affirmer un gap sans preuve.
+Comparer des métriques obtenues dans des conditions incompatibles.
+Compléter des informations absentes.
+Présenter les bibliothèques logicielles comme des travaux scientifiques.
+Décrire en détail l’installation de la Raspberry Pi.
+Décider seul de la contribution finale de l’article.
+19. Formulation finale à retenir
+Instruction principale. Ton travail ne consiste plus à rédiger l’état de l’art. Il consiste à construire la base scientifique qui permettra sa rédaction. Pour chaque sous-thème, tu dois identifier les références fiables, extraire les méthodes, datasets, protocoles, résultats et limites, comparer les travaux dans un tableau, puis formuler les convergences, contradictions, gaps potentiels et décisions utiles au projet. La rédaction finale sera assurée par l’encadrante à partir de ces livrables.

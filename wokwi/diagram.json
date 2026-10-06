@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "author": "Equipe Stage Edge AI",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 100, "left": 100, "attrs": {} },
+    { "type": "wokwi-mpu6050", "id": "mpu", "top": -40, "left": 60, "attrs": {} },
+    { "type": "wokwi-ssd1306", "id": "oled", "top": -60, "left": 220, "attrs": { "i2cAddress": "0x3c" } },
+    { "type": "wokwi-led", "id": "led_green", "top": 360, "left": 60, "attrs": { "color": "green", "label": "NORMAL" } },
+    { "type": "wokwi-led", "id": "led_yellow", "top": 360, "left": 130, "attrs": { "color": "yellow", "label": "ALERTE" } },
+    { "type": "wokwi-led", "id": "led_red", "top": 360, "left": 200, "attrs": { "color": "red", "label": "PANNE" } },
+    { "type": "wokwi-resistor", "id": "r1", "top": 320, "left": 60, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "r2", "top": 320, "left": 130, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "r3", "top": 320, "left": 200, "attrs": { "value": "220" } },
+    { "type": "wokwi-relay-module", "id": "relay", "top": 280, "left": 300, "attrs": { "label": "E-STOP RELAIS" } },
+    { "type": "wokwi-buzzer", "id": "buzzer", "top": 160, "left": 320, "attrs": { "hasLocalSound": "true" } },
+    { "type": "wokwi-pushbutton", "id": "btn_fault", "top": 30, "left": 320, "attrs": { "color": "red", "label": "SIMULER CHOC" } }
+  ],
+  "connections": [
+    [ "esp:3V3", "mpu:VCC", "red", [ "v0" ] ],
+    [ "esp:GND.1", "mpu:GND", "black", [ "v0" ] ],
+    [ "esp:21", "mpu:SDA", "blue", [ "v0" ] ],
+    [ "esp:22", "mpu:SCL", "yellow", [ "v0" ] ],
+
+    [ "esp:3V3", "oled:VCC", "red", [ "v0" ] ],
+    [ "esp:GND.1", "oled:GND", "black", [ "v0" ] ],
+    [ "esp:21", "oled:SDA", "blue", [ "v0" ] ],
+    [ "esp:22", "oled:SCL", "yellow", [ "v0" ] ],
+
+    [ "esp:18", "r1:1", "green", [ "v0" ] ],
+    [ "r1:2", "led_green:A", "green", [ "v0" ] ],
+    [ "led_green:C", "esp:GND.2", "black", [ "v0" ] ],
+
+    [ "esp:19", "r2:1", "gold", [ "v0" ] ],
+    [ "r2:2", "led_yellow:A", "gold", [ "v0" ] ],
+    [ "led_yellow:C", "esp:GND.2", "black", [ "v0" ] ],
+
+    [ "esp:23", "r3:1", "red", [ "v0" ] ],
+    [ "r3:2", "led_red:A", "red", [ "v0" ] ],
+    [ "led_red:C", "esp:GND.2", "black", [ "v0" ] ],
+
+    [ "esp:5V", "relay:VCC", "red", [ "v0" ] ],
+    [ "esp:GND.2", "relay:GND", "black", [ "v0" ] ],
+    [ "esp:5", "relay:IN", "purple", [ "v0" ] ],
+
+    [ "esp:4", "buzzer:2", "orange", [ "v0" ] ],
+    [ "esp:GND.2", "buzzer:1", "black", [ "v0" ] ],
+
+    [ "esp:15", "btn_fault:2.l", "red", [ "v0" ] ],
+    [ "esp:GND.1", "btn_fault:1.l", "black", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}

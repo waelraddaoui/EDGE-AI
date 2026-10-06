@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Frontend dependencies and build output
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Local logs and editor files
+*.log
+.vscode/
+.idea/
+
+# Temporary diagnostic and crop images
+*crop*.jpg
+*grid*.jpg
+*zoomed*.jpg
+*enhanced*.jpg
+*arc*.jpg
+bac2_*.jpg
+fc82_*.jpg
+check_*.jpg
+conn_*.jpg
+full_*.jpg
+entire_*.jpg
+wires_*.jpg
+top_wires_*.jpg
+rgb_inspect_*.jpg
+rgb_area*.jpg
+dc2f_*.jpg
+mpu_prev_*.jpg
+mpu_detail.jpg
+mpu_compare.jpg
+
+# Temporary Office lock files
+~$*.docx
+~$*.pptx
+~$*.xlsx
+
+# Large raw archives & NASA IMS Bearing datasets (> 100 MB bloqués par GitHub)
+*.7z
+*.rar
+*.zip
+*.tar.gz
+data/4.+Bearings/
+data/raw/*.parquet

@@ -1,0 +1,13 @@
+id,text
+1,La ville de Monastir développe un jumeau numérique pour optimiser la mobilité et l’énergie.
+2,Les étudiants d’ESPRIM conçoivent un prototype pour analyser des flux de textes en français.
+3,L’intelligence artificielle améliore la détection d’anomalies dans les données industrielles.
+4,"Nous explorons la tokenisation, la lemmatisation et l’étiquetage morpho-syntaxique."
+5,Les capteurs envoient des mesures en temps réel vers un tableau de bord.
+6,Le projet vise la sobriété numérique et la durabilité des systèmes embarqués.
+7,La municipalité collabore avec l’université pour développer des services intelligents.
+8,Les étudiants testent des modèles spaCy et NLTK pour l’analyse lexicale.
+9,"On supprime les mots vides, on compte les bigrammes, puis on trace les fréquences."
+10,Le corpus comprend des entités nommées comme des lieux et des organisations.
+11,Chaque document est prétraité pour normaliser la casse et la ponctuation.
+12,"Un analyseur simple extrait des sujets, des verbes et des objets via les dépendances."

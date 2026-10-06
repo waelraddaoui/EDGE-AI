@@ -1,0 +1,69 @@
+MINI-RAPPORT DE STAGE
+État de l'art, solutions existantes et recherche de dataset
+Edge AI explicable et agent IA/RAG pour la détection d'anomalies industrielles sur Raspberry Pi
+Stage d'été — ESPRIM
+Encadreure : Amina Rouis
+1. Introduction
+Ce mini-rapport constitue la première étape du stage d'été consacré au développement d'un prototype Edge AI explicable, déployé sur Raspberry Pi, pour la détection d'anomalies industrielles, associé à un agent IA augmenté par RAG pour le diagnostic. Il présente trois volets demandés par l'encadreure : un état de l'art sur les approches existantes (Edge AI, explicabilité, agents RAG pour la maintenance industrielle), une synthèse des solutions déjà disponibles dans la littérature et dans l'industrie, et une recherche de jeux de données publics adaptés au projet.
+2. État de l'art
+2.1. Edge AI pour la détection d'anomalies industrielles
+Le déploiement de modèles d'IA directement sur des dispositifs embarqués (Edge AI) répond aux limites du traitement cloud : latence, dépendance réseau et confidentialité des données industrielles. Plusieurs travaux récents confirment la faisabilité de cette approche sur Raspberry Pi. Une étude propose un système de détection d'anomalies entièrement exécuté sur Raspberry Pi 4, combinant Isolation Forest et autoencodeur pour traiter des données capteurs IIoT en boucle fermée, avec déclenchement automatique d'actions correctives.
+Une autre étude évalue un pipeline léger associant extraction de caractéristiques par ondelettes/Fourier et modèles de classification embarqués, validé sur Raspberry Pi 4 (1,5 GHz, 4 Go de RAM) utilisée comme mandataire d'un dispositif de classe microcontrôleur, montrant qu'un réseau de neurones peu profond offre le meilleur compromis pour ce type de matériel.
+Dans le domaine domestique/IoT, une architecture hybride combinant LSTM-autoencodeur et Isolation Forest atteint une précision de détection élevée avec une latence d'inférence inférieure à 50 ms sur Raspberry Pi et Jetson Nano, la quantification réduisant fortement le temps d'inférence et la consommation d'énergie. Ces résultats confirment que le compromis performance/latence/mémoire visé par le cahier des charges du stage est un problème de recherche actif et documenté, avec des ordres de grandeur de référence exploitables pour le benchmark à réaliser (latences de quelques millisecondes à quelques centaines de millisecondes selon le modèle et le matériel).
+Sources : ResearchGate (Edge-Based Real-Time Sensor Data Processing, IIoT) ; MDPI Sensors 2025 (Lightweight Signal Processing and Edge AI) ; MDPI IoT 2025 (Edge AI for Real-Time Anomaly Detection in Smart Homes).
+2.2. Explicabilité (XAI) pour la maintenance prédictive
+L'explicabilité est un axe de recherche mature en maintenance prédictive. Les revues récentes recensent des méthodes telles que SHAP (Shapley Additive Explanations), les autoencodeurs variationnels ou les approches combinant IA et statistiques classiques (théorie des valeurs extrêmes, analyse de variance) pour rendre les décisions des modèles interprétables, avec une attention particulière portée à l'intégration humaine dans la boucle (human-in-the-loop).
+Des travaux plus spécifiques aux séries temporelles industrielles proposent des méthodes d'attribution de type Shapley adaptées aux capteurs multiples de l'IIoT, permettant d'identifier quelles variables ou fenêtres temporelles ont le plus contribué à une alerte. Une revue dédiée à la maintenance prédictive souligne que SHAP reste la méthode la plus utilisée pour relier les caractéristiques extraites (RMS, kurtosis, énergie spectrale, etc.) aux décisions du modèle, ce qui correspond directement au module d'explicabilité prévu dans le cahier des charges du stage (F6.1 à F6.6).
+Sources : arXiv 2404.11597 (revue XAI pour le diagnostic de défauts) ; MDPI Sensors 2026 (XAI en smart manufacturing) ; arXiv 2506.01450 (ShaTS, explicabilité Shapley pour séries temporelles IIoT) ; Springer (Explainable Anomaly Detection, survey PdM).
+2.3. Agents IA augmentés par RAG pour le diagnostic industriel
+L'usage d'agents LLM combinés à la génération augmentée par récupération (RAG) pour la maintenance industrielle est une tendance émergente en 2025-2026. Un exemple particulièrement proche du sujet du stage est le framework MindRAG, qui structure les données de supervision de condition (capteurs, hiérarchie machine, annotations d'experts) dans une base vectorielle multimodale et développe des agents spécialisés (agent principal, agent d'analyse de signal, planificateur de maintenance) capables de répondre à des questions d'analyse historique, de détection de défauts, d'estimation de sévérité et de recommandation de maintenance, tout en exposant les documents utilisés pour la génération afin d'assurer la traçabilité.
+Plus largement, la RAG dite « agentique » étend le schéma classique retrieval-augmentation-génération avec des capacités de planification, de raisonnement multi-étapes et d'utilisation d'outils, ce qui est directement transposable au module 7 du cahier des charges (agent IA/RAG générant un rapport de diagnostic structuré à partir des résultats du modèle et d'une base documentaire contrôlée).
+Sources : arXiv 2506.09247 (MindRAG, agent de supervision de condition industrielle) ; arXiv 2501.09136 (survey Agentic RAG).
+3. Solutions déjà disponibles
+Le tableau suivant synthétise les briques technologiques et approches déjà documentées dans la littérature ou disponibles publiquement, pertinentes pour chaque module du cahier des charges du stage.
+Besoin (module CdC)
+Solutions / outils déjà disponibles
+Pertinence pour le stage
+Modèles légers (Module 3)
+Isolation Forest, Random Forest, XGBoost léger, autoencodeur compact, 1D-CNN — largement documentés et implémentés (scikit-learn, XGBoost, TensorFlow/Keras)
+Base de comparaison directe, conforme au tableau de décision demandé (F3.6)
+Optimisation / déploiement Edge (Module 4)
+TensorFlow Lite, ONNX Runtime, quantification post-entraînement
+Réduction de la taille et de la latence sur Raspberry Pi 4/5
+Explicabilité (Module 6)
+SHAP, permutation importance, ShaTS (Shapley pour séries temporelles IIoT)
+Analyse des variables importantes et des fenêtres critiques
+Agent IA/RAG (Module 7)
+LangChain / LangGraph, bases vectorielles FAISS ou ChromaDB, architectures agentiques type MindRAG
+Construction de l'agent de diagnostic et de la base documentaire contrôlée
+Benchmark embarqué (Module 5)
+Frameworks de profilage (psutil pour CPU/RAM, mesure de latence par chronométrage), études de référence Raspberry Pi 4/5
+Points de comparaison chiffrés pour le compromis performance/latence/mémoire
+
+Ce panorama montre qu'aucune solution « clé en main » ne couvre l'ensemble de la chaîne décrite dans le cahier des charges (des données capteurs jusqu'au rapport de diagnostic généré par un agent RAG) : les briques existent séparément (modélisation légère, déploiement Edge, XAI, RAG industriel) mais leur intégration bout-en-bout sur Raspberry Pi, avec un agent RAG dédié au diagnostic pédagogique, reste un travail d'assemblage et d'expérimentation propre à ce stage — ce qui en confirme l'intérêt scientifique.
+4. Recherche de dataset
+Quatre familles de jeux de données publics, mentionnées dans le cahier des charges, ont été examinées. Le tableau ci-dessous résume leurs caractéristiques principales.
+Dataset
+Type de données
+Caractéristiques
+Accès
+CWRU Bearing Dataset
+Vibrations (roulements)
+Signaux normaux et défauts (bague interne, bille, bague externe) de tailles 0,007 à 0,040 pouce, 4 charges moteur (0-3 HP), échantillonnage 12/48 kHz, fichiers .mat
+Case Western Reserve University Bearing Data Center (accès libre)
+NASA C-MAPSS
+Séries temporelles multivariées (dégradation moteur turbofan simulé)
+4 sous-ensembles avec conditions opérationnelles et modes de défaillance variés, utilisé pour la prédiction de durée de vie résiduelle (RUL)
+NASA Prognostics Data Repository / referencé sur Kaggle ; le portail data.nasa.gov signale actuellement une indisponibilité temporaire du téléchargement direct, à vérifier au démarrage du stage
+MIMII Dataset
+Audio (sons de machines industrielles)
+Sons normaux/anormaux de 4 types de machines (valves, pompes, ventilateurs, rails coulissants), bruit de fond réel mélangé à plusieurs niveaux de SNR (-6, 0, 6 dB)
+Zenodo, licence Creative Commons (accès libre)
+SWaT / WADI
+Multivarié (capteurs et actionneurs d'un système de traitement d'eau)
+Données de fonctionnement normal et de cyberattaques/anomalies sur un banc pilote industriel réaliste
+iTrust, Singapore University of Technology and Design (accès sur demande, formulaire de requête)
+
+Recommandation : pour un stage de huit semaines avec faisabilité dès la première semaine, le CWRU Bearing Dataset est le candidat le plus adapté comme dataset principal (accès immédiat, format simple, littérature abondante pour comparer les résultats), éventuellement enrichi d'une version bruitée/dégradée (dataset hybride, cf. §6.1 du cahier des charges) pour les tests de robustesse. Le MIMII Dataset constitue une alternative ou un complément intéressant si l'axe acoustique est privilégié. NASA C-MAPSS et SWaT/WADI sont des pistes secondaires, à retenir si l'accès aux données est confirmé, sachant que C-MAPSS présente une indisponibilité temporaire signalée sur le portail officiel et que SWaT/WADI nécessitent une procédure de demande d'accès qui peut retarder le démarrage.
+5. Conclusion
+La littérature récente confirme la pertinence et la faisabilité du sujet de stage : le déploiement Edge AI sur Raspberry Pi pour la détection d'anomalies industrielles, l'explicabilité par SHAP et approches dérivées, ainsi que les agents RAG appliqués à la supervision de condition industrielle sont chacun des axes de recherche actifs en 2025-2026, mais leur combinaison complète, du signal capteur jusqu'au rapport de diagnostic généré automatiquement, reste peu explorée dans un cadre embarqué et pédagogique. Le dataset CWRU est retenu comme point de départ recommandé pour garantir la faisabilité expérimentale dès la première semaine, conformément au planning du cahier des charges.
