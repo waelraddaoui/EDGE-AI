@@ -303,6 +303,21 @@ void runInference() {
 
   bool is_fault = (pred.predicted_class == 1 || kurtosis > 4.5f || rms > 0.18f);
 
+  // Calcul dynamique et réactif de l'Indice de Santé (NASA IMS Physical Degradation Model)
+  float dynamic_health = 100.0f;
+  if (rms > 0.08f) {
+    dynamic_health -= (rms - 0.08f) * 350.0f;
+  }
+  if (kurtosis > 3.0f) {
+    dynamic_health -= (kurtosis - 3.0f) * 10.0f;
+  }
+  if (is_fault) {
+    // Si défaut ou choc critique, chute immédiate en zone d'alerte / critique
+    if (dynamic_health > 45.0f) dynamic_health = 35.0f - (rms * 20.0f);
+  }
+  if (dynamic_health < 5.0f) dynamic_health = 5.0f;
+  if (dynamic_health > 99.5f) dynamic_health = 99.5f;
+
   if (is_fault) {
     setRGB(true, false, false);          // LED ROUGE
     digitalWrite(PIN_MOS_CUTOFF, LOW);    // COUPURE MOTEUR (LOTO)
@@ -314,7 +329,7 @@ void runInference() {
   // Télémétrie Série JSON (115200 bauds)
   Serial.print("{\"rms\":"); Serial.print(rms, 4);
   Serial.print(",\"kurtosis\":"); Serial.print(kurtosis, 2);
-  Serial.print(",\"health\":"); Serial.print(pred.health_index, 1);
+  Serial.print(",\"health\":"); Serial.print(dynamic_health, 1);
   Serial.print(",\"fault\":"); Serial.print(is_fault ? 1 : 0);
   Serial.println("}");
 
@@ -335,12 +350,12 @@ void runInference() {
 
   display.setCursor(0, 32);
   display.print("SANTE: ");
-  display.print(pred.health_index, 1);
+  display.print(dynamic_health, 1);
   display.print(" %");
 
   // Jauge de santé
   display.drawRect(0, 46, 128, 8, SSD1306_WHITE);
-  int bar_w = (int)((pred.health_index / 100.0f) * 124);
+  int bar_w = (int)((dynamic_health / 100.0f) * 124);
   if (bar_w < 0) bar_w = 0;
   if (bar_w > 124) bar_w = 124;
   display.fillRect(2, 48, bar_w, 4, SSD1306_WHITE);

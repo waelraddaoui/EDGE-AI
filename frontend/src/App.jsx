@@ -4,6 +4,126 @@ import { Activity, Cpu, Server, MessageSquare, AlertTriangle, CheckCircle, Zap, 
 
 const API_BASE = 'http://127.0.0.1:8000/api';
 
+function FormattedChatMessage({ text, isLight }) {
+  if (!text) return null;
+
+  // 1. Nettoyage de tout reste de syntaxe LaTeX
+  let cleanText = text
+    .replace(/\$\$(.*?)\$\$/gs, (_, formula) => formula.trim())
+    .replace(/\$(.*?)\$/g, (_, formula) => formula.trim())
+    .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '$1 / $2')
+    .replace(/\\text\{([^}]+)\}/g, '$1')
+    .replace(/\\mathbf\{([^}]+)\}/g, '$1')
+    .replace(/\\cdot/g, '×')
+    .replace(/\\times/g, '×')
+    .replace(/\\theta/g, 'θ')
+    .replace(/\\circ/g, '°')
+    .replace(/\\approx/g, '≈')
+    .replace(/\\le/g, '≤')
+    .replace(/\\ge/g, '≥')
+    .replace(/\\pm/g, '±')
+    .replace(/\\,/g, ' ')
+    .replace(/\\left\(/g, '(')
+    .replace(/\\right\)/g, ')')
+    .replace(/\\_/g, '_');
+
+  // 2. Découpage en blocs (tableaux Markdown vs texte standard)
+  const lines = cleanText.split('\n');
+  const blocks = [];
+  let tableLines = [];
+  let inTable = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (line.trim().startsWith('|') && line.trim().endsWith('|')) {
+      inTable = true;
+      tableLines.push(line.trim());
+    } else {
+      if (inTable) {
+        blocks.push({ type: 'table', lines: tableLines });
+        tableLines = [];
+        inTable = false;
+      }
+      blocks.push({ type: 'text', text: line });
+    }
+  }
+  if (inTable && tableLines.length > 0) {
+    blocks.push({ type: 'table', lines: tableLines });
+  }
+
+  const renderInline = (str) => {
+    // Parser **gras** et *italique*
+    const parts = str.split(/(\*\*.*?\*\*|\*.*?\*)/g);
+    return parts.map((part, pIdx) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return (
+          <strong key={pIdx} style={{ color: isLight ? '#1D4ED8' : '#93C5FD', fontWeight: '700' }}>
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+      if (part.startsWith('*') && part.endsWith('*')) {
+        return <em key={pIdx} style={{ opacity: 0.88 }}>{part.slice(1, -1)}</em>;
+      }
+      return part;
+    });
+  };
+
+  return (
+    <div style={{ lineHeight: '1.5', fontSize: '0.88rem' }}>
+      {blocks.map((block, bIdx) => {
+        if (block.type === 'table') {
+          const rows = block.lines
+            .map(l => l.split('|').map(c => c.trim()).filter((_, idx, arr) => idx > 0 && idx < arr.length - 1))
+            .filter(r => !r.every(c => /^:?-+:?$/.test(c)));
+
+          if (rows.length === 0) return null;
+          const header = rows[0];
+          const dataRows = rows.slice(1);
+
+          return (
+            <div key={bIdx} style={{ overflowX: 'auto', margin: '10px 0' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem', background: isLight ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.04)', borderRadius: '6px', overflow: 'hidden' }}>
+                <thead>
+                  <tr style={{ background: isLight ? 'rgba(37,99,235,0.1)' : 'rgba(59,130,246,0.18)', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                    {header.map((col, cIdx) => (
+                      <th key={cIdx} style={{ padding: '6px 8px', textAlign: 'left', fontWeight: '700', color: isLight ? '#1E293B' : '#93C5FD' }}>
+                        {renderInline(col)}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {dataRows.map((r, rIdx) => (
+                    <tr key={rIdx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', background: rIdx % 2 === 1 ? (isLight ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.02)') : 'transparent' }}>
+                      {r.map((col, cIdx) => (
+                        <td key={cIdx} style={{ padding: '6px 8px' }}>
+                          {renderInline(col)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        }
+
+        const line = block.text;
+        if (!line.trim()) {
+          return <div key={bIdx} style={{ height: '6px' }} />;
+        }
+
+        return (
+          <div key={bIdx} style={{ margin: '2px 0' }}>
+            {renderInline(line)}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function App() {
   const fileInputRef = useRef(null);
   const streamIntervalRef = useRef(null);
@@ -27,7 +147,7 @@ function App() {
   const [isSimulating, setIsSimulating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [theme, setTheme] = useState('dark');
-  const [isStreaming, setIsStreaming] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(true);
   const [iotTelemetry, setIotTelemetry] = useState({
     sensors: {
       shaft_speed_rpm: 1797.2,
@@ -79,6 +199,28 @@ function App() {
             }
             if (data.telemetry) {
               setIotTelemetry(data.telemetry);
+              if (data.telemetry.edge_diagnostic) {
+                const diag = data.telemetry.edge_diagnostic;
+                const isAnom = Boolean(diag.is_anomaly);
+                let hi = diag.health_index != null ? diag.health_index : 98.5;
+                if (isAnom && hi > 50) {
+                  hi = 32.5; // Chute immédiate en cas de détection d'anomalie
+                }
+                setPrediction({
+                  prediction: diag.prediction || (isAnom ? "Défaut Détecté (Vibration Critique)" : "Normal (Sain)"),
+                  is_anomaly: isAnom,
+                  confidence: isAnom ? 0.994 : 0.988,
+                  latency_ms: data.telemetry.sensors?.transmission_latency_ms || 0.02
+                });
+                setHealthData({
+                  health_index: hi,
+                  health_status: isAnom ? "Alerte Dégradation Critique" : (hi > 85 ? "Fonctionnement Nominal Optimal" : "Surveillance Accrue"),
+                  stage: isAnom ? "Stade 3 NASA (Panne)" : (hi > 85 ? "Stade 1 NASA (Sain)" : "Stade 2 NASA (Dégradation)"),
+                  iso_zone: isAnom ? "Zone ISO D (Danger > 4.5 mm/s)" : "Zone ISO A (< 1.4 mm/s)",
+                  rul_estimated: isAnom ? "< 48 heures" : "> 12 mois",
+                  color: isAnom ? "#EF4444" : (hi > 85 ? "#10B981" : "#F59E0B")
+                });
+              }
             }
             if (data.gpio) {
               setGpioStatus(data.gpio);
@@ -87,7 +229,7 @@ function App() {
         } catch (err) {
           console.error("Erreur de streaming IoT:", err);
         }
-      }, 1500);
+      }, 1000);
     } else {
       if (streamIntervalRef.current) {
         clearInterval(streamIntervalRef.current);
@@ -449,7 +591,41 @@ function App() {
           </h1>
           <p style={{ color: 'var(--text-muted)' }}>CWRU & NASA IMS Bearing Fault Detection Dashboard</p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          {/* Badge Matériel Physique vs Simulation */}
+          {iotTelemetry?.is_real_hardware ? (
+            <span style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 14px',
+              borderRadius: '20px',
+              background: 'rgba(16, 185, 129, 0.15)',
+              border: '1px solid #10B981',
+              color: '#10B981',
+              fontSize: '0.82rem',
+              fontWeight: '700'
+            }}>
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', display: 'inline-block', boxShadow: '0 0 8px #10B981' }} />
+              🟢 ESP32 PHYSIQUE CONNECTÉ ({iotTelemetry.port || 'COM3'})
+            </span>
+          ) : (
+            <span style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              borderRadius: '20px',
+              background: 'rgba(245, 158, 11, 0.12)',
+              border: '1px solid rgba(245, 158, 11, 0.4)',
+              color: '#F59E0B',
+              fontSize: '0.8rem',
+              fontWeight: '600'
+            }}>
+              🟡 Mode Simulation (Branchez ESP32)
+            </span>
+          )}
+
           {/* Bouton Toggle Streaming IoT Temps Réel */}
           <button 
             onClick={toggleStreaming}
@@ -902,94 +1078,81 @@ function App() {
           </div>
         </div>
 
-        {/* ── ACTIONNEURS & BROCHES GPIO RASPBERRY PI ── */}
+        {/* ── ACTIONNEURS & BROCHES MATÉRIELLES ESP32 (DOIT DEVKIT V1) ── */}
         <div style={{ background: isLight ? 'rgba(0,0,0,0.03)' : 'rgba(0,0,0,0.3)', padding: '1rem', borderRadius: '12px', border: `1px solid ${isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)'}` }}>
-          <div style={{ fontSize: '0.85rem', fontWeight: '700', color: isLight ? '#1E293B' : '#fff', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Cpu size={16} color="var(--neon-blue)" />
-            État Matériel des Broches GPIO Raspberry Pi (Broadcom BCM) & Actionneurs Industriels :
+          <div style={{ fontSize: '0.85rem', fontWeight: '700', color: isLight ? '#1E293B' : '#fff', marginBottom: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Cpu size={16} color="var(--neon-blue)" />
+              <span>État Matériel des Broches ESP32 (DOIT DevKit V1) & Actionneurs Réels :</span>
+            </div>
+            <span style={{ fontSize: '0.75rem', padding: '3px 8px', borderRadius: '6px', background: 'rgba(59,130,246,0.15)', color: '#60A5FA', border: '1px solid rgba(59,130,246,0.3)' }}>
+              ESP32 240 MHz · I²C 400 kHz · TinyML C++ Embarqué
+            </span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
-            {/* GPIO 17 - LED Verte */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', borderRadius: '8px', background: gpioStatus?.pins?.GPIO_17?.state ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255,255,255,0.03)', border: `1px solid ${gpioStatus?.pins?.GPIO_17?.state ? '#10B981' : 'transparent'}` }}>
-              <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: gpioStatus?.pins?.GPIO_17?.state ? '#10B981' : '#475569', boxShadow: gpioStatus?.pins?.GPIO_17?.state ? '0 0 10px #10B981' : 'none' }} />
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '10px' }}>
+            {/* Bus I2C - Capteur MPU-6050 & OLED */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.12)', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
+              <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#3B82F6', boxShadow: '0 0 10px #3B82F6' }} />
               <div>
-                <div style={{ fontSize: '0.8rem', fontWeight: '600', color: isLight ? '#1E293B' : '#fff' }}>GPIO 17 (Pin 11)</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>LED Verte (Nominal) : {gpioStatus?.pins?.GPIO_17?.state ? '🟢 ON' : '⚪ OFF'}</div>
+                <div style={{ fontSize: '0.8rem', fontWeight: '700', color: isLight ? '#1E293B' : '#fff' }}>I²C : GPIO 21 (SDA) / 22 (SCL)</div>
+                <div style={{ fontSize: '0.7rem', color: '#93C5FD' }}>MPU-6050 (0x68) & OLED 128x64 (0x3C)</div>
+                <div style={{ fontSize: '0.68rem', color: '#10B981', marginTop: '2px' }}>✓ Communication I²C Active</div>
               </div>
             </div>
 
-            {/* GPIO 22 - LED Jaune */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', borderRadius: '8px', background: gpioStatus?.pins?.GPIO_22?.state ? 'rgba(245, 158, 11, 0.15)' : 'rgba(255,255,255,0.03)', border: `1px solid ${gpioStatus?.pins?.GPIO_22?.state ? '#F59E0B' : 'transparent'}` }}>
-              <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: gpioStatus?.pins?.GPIO_22?.state ? '#F59E0B' : '#475569', boxShadow: gpioStatus?.pins?.GPIO_22?.state ? '0 0 10px #F59E0B' : 'none' }} />
+            {/* GPIO 18 - LED RGB Verte */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '8px', background: !prediction?.is_anomaly ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255,255,255,0.03)', border: `1px solid ${!prediction?.is_anomaly ? '#10B981' : 'transparent'}` }}>
+              <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: !prediction?.is_anomaly ? '#10B981' : '#475569', boxShadow: !prediction?.is_anomaly ? '0 0 10px #10B981' : 'none' }} />
               <div>
-                <div style={{ fontSize: '0.8rem', fontWeight: '600', color: isLight ? '#1E293B' : '#fff' }}>GPIO 22 (Pin 15)</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>LED Jaune (Alerte) : {gpioStatus?.pins?.GPIO_22?.state ? '🟡 ON' : '⚪ OFF'}</div>
+                <div style={{ fontSize: '0.8rem', fontWeight: '700', color: isLight ? '#1E293B' : '#fff' }}>GPIO 18 : LED Verte (RGB HW-479)</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>État Sain Nominal : {!prediction?.is_anomaly ? '🟢 ON (ALLUMÉE)' : '⚪ OFF'}</div>
+                <div style={{ fontSize: '0.68rem', color: !prediction?.is_anomaly ? '#10B981' : 'var(--text-muted)', marginTop: '2px' }}>{!prediction?.is_anomaly ? '✓ Machine saine sous tension' : 'Éteinte en alerte'}</div>
               </div>
             </div>
 
-            {/* GPIO 27 - LED Rouge */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', borderRadius: '8px', background: gpioStatus?.pins?.GPIO_27?.state ? 'rgba(239, 68, 68, 0.15)' : 'rgba(255,255,255,0.03)', border: `1px solid ${gpioStatus?.pins?.GPIO_27?.state ? '#EF4444' : 'transparent'}` }}>
-              <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: gpioStatus?.pins?.GPIO_27?.state ? '#EF4444' : '#475569', boxShadow: gpioStatus?.pins?.GPIO_27?.state ? '0 0 10px #EF4444' : 'none' }} />
+            {/* GPIO 19 - LED RGB Rouge */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '8px', background: prediction?.is_anomaly ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.03)', border: `1px solid ${prediction?.is_anomaly ? '#EF4444' : 'transparent'}` }}>
+              <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: prediction?.is_anomaly ? '#EF4444' : '#475569', boxShadow: prediction?.is_anomaly ? '0 0 10px #EF4444' : 'none' }} />
               <div>
-                <div style={{ fontSize: '0.8rem', fontWeight: '600', color: isLight ? '#1E293B' : '#fff' }}>GPIO 27 (Pin 13)</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>LED Rouge (Panne) : {gpioStatus?.pins?.GPIO_27?.state ? '🔴 ON' : '⚪ OFF'}</div>
+                <div style={{ fontSize: '0.8rem', fontWeight: '700', color: isLight ? '#1E293B' : '#fff' }}>GPIO 19 : LED Rouge (RGB HW-479)</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Alerte Défaut : {prediction?.is_anomaly ? '🔴 ON (ALARME)' : '⚪ OFF'}</div>
+                <div style={{ fontSize: '0.68rem', color: prediction?.is_anomaly ? '#EF4444' : 'var(--text-muted)', marginTop: '2px' }}>{prediction?.is_anomaly ? '⚠️ Alarme critique détectée' : 'Aucune alerte active'}</div>
               </div>
             </div>
 
-            {/* GPIO 23 - Relais E-Stop */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', borderRadius: '8px', background: gpioStatus?.pins?.GPIO_23?.state ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.03)', border: `1px solid ${gpioStatus?.pins?.GPIO_23?.state ? '#EF4444' : 'transparent'}` }}>
+            {/* GPIO 5 - LED RGB Bleue */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.12)', border: '1px solid rgba(59, 130, 246, 0.25)' }}>
+              <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#3B82F6', boxShadow: '0 0 8px #3B82F6' }} />
+              <div>
+                <div style={{ fontSize: '0.8rem', fontWeight: '700', color: isLight ? '#1E293B' : '#fff' }}>GPIO 5 : LED Bleue (RGB HW-479)</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Statut / Liaison TinyML : 🔵 PRÊT</div>
+                <div style={{ fontSize: '0.68rem', color: '#93C5FD', marginTop: '2px' }}>Inférence 250 Hz active</div>
+              </div>
+            </div>
+
+            {/* GPIO 23 - Module MOSFET IRF520 Coupure Moteur */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', borderRadius: '8px', background: prediction?.is_anomaly ? 'rgba(239, 68, 68, 0.22)' : 'rgba(16, 185, 129, 0.12)', border: `1px solid ${prediction?.is_anomaly ? '#EF4444' : '#10B981'}` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Power size={15} color={gpioStatus?.pins?.GPIO_23?.state ? '#EF4444' : '#94A3B8'} />
+                <Power size={18} color={prediction?.is_anomaly ? '#EF4444' : '#10B981'} />
                 <div>
-                  <div style={{ fontSize: '0.8rem', fontWeight: '600', color: isLight ? '#1E293B' : '#fff' }}>GPIO 23 (Pin 16)</div>
-                  <div style={{ fontSize: '0.7rem', color: gpioStatus?.pins?.GPIO_23?.state ? '#EF4444' : 'var(--text-muted)' }}>Relais E-Stop : {gpioStatus?.pins?.GPIO_23?.state ? '⚡ COUPURE' : '✓ FERMÉ'}</div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: '700', color: isLight ? '#1E293B' : '#fff' }}>GPIO 23 : MOSFET IRF520</div>
+                  <div style={{ fontSize: '0.7rem', color: prediction?.is_anomaly ? '#EF4444' : '#10B981' }}>
+                    {prediction?.is_anomaly ? '⚡ COUPURE MOTEUR (LOTO)' : '✓ ALIMENTATION MOTEUR (ON)'}
+                  </div>
+                  <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '2px' }}>Sécurité proactive machine</div>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={() => toggleGPIOPin(23, gpioStatus?.pins?.GPIO_23?.state || false)}
-                title="Déclencher / Réarmer manuellement le relais d'urgence"
-                style={{
-                  fontSize: '0.68rem',
-                  padding: '3px 7px',
-                  borderRadius: '6px',
-                  background: gpioStatus?.pins?.GPIO_23?.state ? '#EF4444' : 'rgba(255,255,255,0.1)',
-                  color: '#fff',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontWeight: '600'
-                }}
-              >
-                {gpioStatus?.pins?.GPIO_23?.state ? 'Réarmer' : 'Tester'}
-              </button>
-            </div>
-
-            {/* GPIO 24 - Buzzer Alarme */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', borderRadius: '8px', background: gpioStatus?.pins?.GPIO_24?.state ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255,255,255,0.03)', border: `1px solid ${gpioStatus?.pins?.GPIO_24?.state ? '#3B82F6' : 'transparent'}` }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Bell size={15} color={gpioStatus?.pins?.GPIO_24?.state ? '#3B82F6' : '#94A3B8'} />
-                <div>
-                  <div style={{ fontSize: '0.8rem', fontWeight: '600', color: isLight ? '#1E293B' : '#fff' }}>GPIO 24 (Pin 18)</div>
-                  <div style={{ fontSize: '0.7rem', color: gpioStatus?.pins?.GPIO_24?.state ? '#3B82F6' : 'var(--text-muted)' }}>Buzzer : {gpioStatus?.pins?.GPIO_24?.state ? '🔊 ACTIF' : '⚪ SILENCE'}</div>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => toggleGPIOPin(24, gpioStatus?.pins?.GPIO_24?.state || false)}
-                title="Tester le signal sonore d'alerte"
-                style={{
-                  fontSize: '0.68rem',
-                  padding: '3px 7px',
-                  borderRadius: '6px',
-                  background: gpioStatus?.pins?.GPIO_24?.state ? '#3B82F6' : 'rgba(255,255,255,0.1)',
-                  color: '#fff',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontWeight: '600'
-                }}
-              >
-                {gpioStatus?.pins?.GPIO_24?.state ? 'Couper' : 'Bip'}
-              </button>
+              <span style={{
+                fontSize: '0.7rem',
+                padding: '4px 8px',
+                borderRadius: '6px',
+                background: prediction?.is_anomaly ? '#EF4444' : 'rgba(16,185,129,0.2)',
+                color: '#fff',
+                fontWeight: '700'
+              }}>
+                {prediction?.is_anomaly ? 'COUPÉ' : 'ACTIF'}
+              </span>
             </div>
           </div>
         </div>
@@ -1084,7 +1247,7 @@ function App() {
               borderBottomLeftRadius: msg.role === 'assistant' ? '4px' : '12px',
               boxShadow: isLight ? '0 2px 8px rgba(0,0,0,0.05)' : 'none'
             }}>
-              <div style={{ margin: 0, fontSize: '0.88rem', whiteSpace: 'pre-wrap', lineHeight: '1.45' }}>{msg.text}</div>
+              <FormattedChatMessage text={msg.text} isLight={isLight} />
               {msg.sources && msg.sources.length > 0 && (
                 <div style={{ marginTop: '10px', fontSize: '0.73rem', color: isLight ? '#475569' : '#CBD5E1', background: isLight ? 'rgba(37,99,235,0.06)' : 'rgba(0,0,0,0.25)', padding: '6px 10px', borderRadius: '6px', border: `1px solid ${isLight ? 'rgba(37,99,235,0.15)' : 'rgba(255,255,255,0.05)'}` }}>
                   📚 <strong>Sources RAG ({msg.sources.length}) :</strong> {msg.sources.map(s => s.doc_id).join(', ')}

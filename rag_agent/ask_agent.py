@@ -112,12 +112,12 @@ class RAGAgent:
                         "**Phase 2 : Extraction du Roulement**\n"
                         "2. 🧰 Déposer l'accouplement mécanique côté entraînement (Drive End).\n"
                         "3. 🔧 Utiliser un extracteur mécanique ou hydraulique à 3 griffes en prenant appui sur la bague intérieure pour ne pas endommager la portée d'arbre.\n"
-                        "4. 🔍 Examiner la portée d'arbre : vérifier l'absence de *fretting corrosion* (rouille de contact) et contrôler la tolérance d'arbre (cote j6/k5).\n\n"
+                        "4. 🔍 Examiner la portée d'arbre : vérifier l'absence de fretting corrosion (rouille de contact) et contrôler la tolérance d'arbre (cote j6/k5).\n\n"
                         "**Phase 3 : Montage du Roulement Neuf**\n"
                         "5. 🔥 Chauffage par induction du roulement neuf **SKF 6205-2RS** à **110°C** pour emmanchement sans effort.\n"
                         "6. ⚙️ Pousser le roulement en butée contre l'épaulement d'arbre jusqu'à complet refroidissement.\n\n"
                         "**Phase 4 : Contrôle Vibratoire Final**\n"
-                        "7. 📊 Mesure vibratoire de contrôle : disparition du pic spectral à 162.2 Hz, Kurtosis $\\le 3.0$ et vibration efficace $V_{RMS} < 1.4\\,\\text{mm/s}$ (Zone ISO A)."
+                        "7. 📊 Mesure vibratoire de contrôle : disparition du pic spectral à 162.2 Hz, Kurtosis ≤ 3.0 et vibration efficace VRMS < 1.4 mm/s (Zone ISO A)."
                     ),
                     "sources": [{"doc_id": "D13_normes_industrielles_iso10816.md", "score": 0.96}, {"doc_id": "D2_fiche_technique_roulements.md", "score": 0.93}]
                 }
@@ -133,7 +133,7 @@ class RAGAgent:
                         "4. 🔍 Contrôler l'état des flasques d'étanchéité (2RS - joints caoutchouc nitrile NBR).\n"
                         "5. 🔥 Montage par induction à **110°C** et graissage avec une graisse propre haute vitesse.\n\n"
                         "**Phase 3 : Validation**\n"
-                        "6. 📈 Test à vitesse nominale (1797 RPM) : Crest Factor $< 3.5$ et Indice de Santé $> 95\\%$."
+                        "6. 📈 Test à vitesse nominale (1797 RPM) : Crest Factor < 3.5 et Indice de Santé > 95%."
                     ),
                     "sources": [{"doc_id": "D2_fiche_technique_roulements.md", "score": 0.95}, {"doc_id": "D13_normes_industrielles_iso10816.md", "score": 0.91}]
                 }
@@ -143,18 +143,18 @@ class RAGAgent:
             return {
                 "response": (
                     "📐 **FRÉQUENCES CINÉMATIQUES CARACTÉRISTIQUES (Roulement SKF 6205-2RS à 1797 RPM)**\n\n"
-                    "À la vitesse de rotation de l'arbre $f_r = \\frac{1797}{60} = 29.95\\,\\text{Hz}$ (30 Hz), avec $N_b=9$ billes, diamètre primitif $D_p=39.04\\,\\text{mm}$, diamètre de bille $d_b=7.94\\,\\text{mm}$ et angle de contact $\\theta = 0^\\circ$ :\n\n"
-                    "1. 🔴 **BPFO (Ball Pass Frequency Outer Race)** — Bague Externe :\n"
-                    "   $$BPFO = \\frac{N_b}{2} \\cdot f_r \\left(1 - \\frac{d_b}{D_p}\\cos\\theta\\right) = \\mathbf{107.4\\,\\text{Hz}}$$\n"
-                    "   *Signature* : Pics harmoniques nets ($107.4\\,\\text{Hz}, 214.8\\,\\text{Hz}, 322.2\\,\\text{Hz}$) non modulés car la bague externe est fixe.\n\n"
-                    "2. 🟣 **BPFI (Ball Pass Frequency Inner Race)** — Bague Interne :\n"
-                    "   $$BPFI = \\frac{N_b}{2} \\cdot f_r \\left(1 + \\frac{d_b}{D_p}\\cos\\theta\\right) = \\mathbf{162.2\\,\\text{Hz}}$$\n"
-                    "   *Signature* : Pics modulés en amplitude par la fréquence de rotation de l'arbre $f_r$ (bandes latérales à $\\pm 30\\,\\text{Hz}$).\n\n"
-                    "3. 🟡 **BSF (Ball Spin Frequency)** — Défaut de Bille :\n"
-                    "   $$BSF = \\frac{D_p}{2 d_b} \\cdot f_r \\left(1 - \\left(\\frac{d_b}{D_p}\\cos\\theta\\right)^2\\right) = \\mathbf{47.1\\,\\text{Hz}}$$\n"
-                    "   *Fréquence d'impact bille $2 \\times BSF = 94.2\\,\\text{Hz}$ (la bille touche alternativement bague intérieure et bague extérieure).* \n\n"
-                    "4. 🟢 **FTF (Fundamental Train Frequency)** — Défaut de Cage :\n"
-                    "   $$FTF = \\frac{f_r}{2} \\left(1 - \\frac{d_b}{D_p}\\cos\\theta\\right) = \\mathbf{11.9\\,\\text{Hz}}$$"
+                    "À la vitesse de rotation de l'arbre fr = 1797 / 60 = 29.95 Hz (≈ 30 Hz), avec Nb = 9 billes, diamètre primitif Dp = 39.04 mm, diamètre de bille db = 7.94 mm et angle de contact θ = 0° :\n\n"
+                    "1. 🔴 **BPFO (Bague Externe)** :\n"
+                    "   BPFO = (Nb / 2) × fr × (1 - (db / Dp) × cos θ) = **107.4 Hz**\n"
+                    "   *Signature* : Pics harmoniques nets (107.4 Hz, 214.8 Hz, 322.2 Hz) non modulés car la bague externe est fixe.\n\n"
+                    "2. 🟣 **BPFI (Bague Interne)** :\n"
+                    "   BPFI = (Nb / 2) × fr × (1 + (db / Dp) × cos θ) = **162.2 Hz**\n"
+                    "   *Signature* : Pics modulés en amplitude par la rotation de l'arbre fr (bandes latérales à ± 30 Hz).\n\n"
+                    "3. 🟡 **BSF (Défaut de Bille)** :\n"
+                    "   BSF = (Dp / (2 × db)) × fr × (1 - (db / Dp)² × cos² θ) = **47.1 Hz**\n"
+                    "   *Fréquence d'impact bille* : 2 × BSF = **94.2 Hz** (la bille frappe alternativement bague intérieure et bague extérieure).\n\n"
+                    "4. 🟢 **FTF (Défaut de Cage)** :\n"
+                    "   FTF = (fr / 2) × (1 - (db / Dp) × cos θ) = **11.9 Hz**"
                 ),
                 "sources": [{"doc_id": "D2_fiche_technique_roulements.md", "score": 0.98}, {"doc_id": "D9_theorie_traitement_signal.md", "score": 0.93}]
             }
@@ -186,14 +186,14 @@ class RAGAgent:
             return {
                 "response": (
                     "📊 **INDICE DE SANTÉ (HEALTH INDEX - HI) & PRONOSTIC RUL (Benchmark NASA IMS)**\n\n"
-                    "L'Indice de Santé ($HI \\in [0, 100]\\%$) est un indicateur composite continu étalonné sur le jeu de données de dégradation continue *Run-to-Failure* de la **NASA IMS** (35 jours d'essai, 4 roulements Rexnord ZA-2115, 2000 RPM) :\n\n"
+                    "L'Indice de Santé (HI de 0% à 100%) est un indicateur composite continu étalonné sur le jeu de données de dégradation continue Run-to-Failure de la **NASA IMS** (35 jours d'essai, 4 roulements Rexnord ZA-2115, 2000 RPM) :\n\n"
                     "**1. Formule Mathématique de Dégradation Exponentielle :**\n"
-                    "$$HI = 100 \\times \\exp\\left( -0.22 \\cdot D_{score} \\right)$$\n"
-                    "Où la déviation multivariée $D_{score} = 0.55 \\cdot Z_{Kurtosis} + 0.45 \\cdot Z_{RMS}$.\n\n"
+                    "HI = 100 × exp(-0.22 × D_score)\n"
+                    "Où la déviation multivariée D_score = 0.55 × Z_Kurtosis + 0.45 × Z_RMS.\n\n"
                     "**2. Grille d'Évaluation des Stades & Pronostic RUL :**\n"
-                    "• 🟢 **Stade 1 (HI : 90% – 100%)** — *Fonctionnement Nominal Optimal* : Kurtosis $\\approx 3.0$, vibrations régulières. **RUL > 12 mois**.\n"
-                    "• 🟡 **Stade 2 (HI : 50% – 85%)** — *Dégradation Précoce (Incipient Fault)* : Apparition de micro-écaillages, chocs répétés ($Kurt > 4.5$). **RUL : 1 à 3 mois** (planifier l'intervention).\n"
-                    "• 🔴 **Stade 3 (HI < 30%)** — *Endommagement Sévère (Critical Failure)* : Écaillage massif, vibration $RMS > 0.3g$. **RUL < 48 heures** (Arrêt d'urgence obligatoire)."
+                    "• 🟢 **Stade 1 (HI : 90% – 100%)** — Fonctionnement Nominal Optimal : Kurtosis ≈ 3.0, vibrations régulières. **RUL > 12 mois**.\n"
+                    "• 🟡 **Stade 2 (HI : 50% – 85%)** — Dégradation Précoce (Incipient Fault) : Apparition de micro-écaillages, chocs répétés (Kurtosis > 4.5). **RUL : 1 à 3 mois** (planifier l'intervention).\n"
+                    "• 🔴 **Stade 3 (HI < 30%)** — Endommagement Sévère (Critical Failure) : Écaillage massif, vibration RMS > 0.3g. **RUL < 48 heures** (Arrêt d'urgence obligatoire)."
                 ),
                 "sources": [{"doc_id": "D12_dataset_nasa_ims_rul.md", "score": 0.97}, {"doc_id": "D13_normes_industrielles_iso10816.md", "score": 0.92}]
             }
@@ -203,13 +203,13 @@ class RAGAgent:
             return {
                 "response": (
                     "📜 **NORME INDUSTRIELLE ISO 10816-3 (SÉVÉRITÉ VIBRATOIRE)**\n\n"
-                    "La norme **ISO 10816-3** classe l'état mécanique des machines tournantes industrielles (moteurs 15 kW à 300 kW sur support rigide) selon la vitesse efficace globale ($V_{RMS}$ en mm/s dans la bande 10 Hz – 1000 Hz) :\n\n"
+                    "La norme **ISO 10816-3** classe l'état mécanique des machines tournantes industrielles (moteurs 15 kW à 300 kW sur support rigide) selon la vitesse efficace globale (VRMS en mm/s dans la bande 10 Hz – 1000 Hz) :\n\n"
                     "| Zone ISO | Seuil Vitesse RMS | Qualification | Décision & Action Opérationnelle |\n"
                     "| :---: | :---: | :---: | :--- |\n"
-                    "| **Zone A** | $V_{RMS} < 1.4\\,\\text{mm/s}$ | 🟢 **Machine Neuve / Excellente** | Aucune restriction, fonctionnement nominal. |\n"
-                    "| **Zone B** | $1.4 \\le V_{RMS} < 2.8\\,\\text{mm/s}$ | 🟢 **Bon État (Acceptable)** | Fonctionnement continu sans restriction. |\n"
-                    "| **Zone C** | $2.8 \\le V_{RMS} < 4.5\\,\\text{mm/s}$ | 🟡 **Insatisfaisant (Alerte)** | Surveillance accrue, planifier maintenance sous 2 à 4 semaines. |\n"
-                    "| **Zone D** | $V_{RMS} \\ge 4.5\\,\\text{mm/s}$ | 🔴 **Inacceptable (Danger)** | **Arrêt immédiat requis** sous peine de casse mécanique. |"
+                    "| **Zone A** | VRMS < 1.4 mm/s | 🟢 **Machine Neuve / Excellente** | Aucune restriction, fonctionnement nominal. |\n"
+                    "| **Zone B** | 1.4 ≤ VRMS < 2.8 mm/s | 🟢 **Bon État (Acceptable)** | Fonctionnement continu sans restriction. |\n"
+                    "| **Zone C** | 2.8 ≤ VRMS < 4.5 mm/s | 🟡 **Insatisfaisant (Alerte)** | Surveillance accrue, planifier maintenance sous 2 à 4 semaines. |\n"
+                    "| **Zone D** | VRMS ≥ 4.5 mm/s | 🔴 **Inacceptable (Danger)** | **Arrêt immédiat requis** sous peine de casse mécanique. |"
                 ),
                 "sources": [{"doc_id": "D13_normes_industrielles_iso10816.md", "score": 0.98}]
             }
@@ -219,17 +219,16 @@ class RAGAgent:
             return {
                 "response": (
                     "🔬 **TRAITEMENT DU SIGNAL & EXTRACTION DES 16 CARACTÉRISTIQUES EXPERTES**\n\n"
-                    "Pour chaque fenêtre temporelle de $N = 1024$ points à $F_s = 12\\,000\\,\\text{Hz}$ :\n\n"
+                    "Pour chaque fenêtre temporelle de N = 1024 points à Fs = 12 000 Hz :\n\n"
                     "**1. Caractéristiques Temporelles Clés :**\n"
-                    "• **Kurtosis ($Kurt$)** : Moment d'ordre 4 centré et normalisé.\n"
-                    "  $$Kurt = \\frac{\\frac{1}{N} \\sum_{i=1}^{N} (x_i - \\bar{x})^4}{\\sigma^4}$$\n"
-                    "  *$Kurt \\approx 3$ en état sain (gaussien) ; $Kurt > 5$ dès l'apparition de micro-chocs impulsionnels.* \n"
-                    "• **Crest Factor ($CF$)** : $CF = \\frac{\\max |x_i|}{x_{RMS}}$. Mesure l'impulsivité des crêtes par rapport à la puissance moyenne.\n"
-                    "• **Valeur Efficace ($x_{RMS}$)** : $x_{RMS} = \\sqrt{\\frac{1}{N} \\sum x_i^2}$. Représente l'énergie globale de vibration.\n"
-                    "• **Skewness ($Sk$)** : Moment d'ordre 3, quantifie l'asymétrie de distribution due aux frottements unilatéraux.\n\n"
+                    "• **Kurtosis (Kurt)** : Moment d'ordre 4 centré et normalisé.\n"
+                    "  Kurt ≈ 3 en état sain (distribution gaussienne) ; Kurt > 5 dès l'apparition de micro-chocs impulsionnels.\n"
+                    "• **Crest Factor (CF)** : Rapport entre la valeur crête max et la valeur RMS. Mesure l'impulsivité des chocs.\n"
+                    "• **Valeur Efficace (RMS)** : Représente l'énergie globale vibratoire en g.\n"
+                    "• **Skewness (Sk)** : Moment d'ordre 3, quantifie l'asymétrie de la distribution.\n\n"
                     "**2. Caractéristiques Fréquentielles (FFT) :**\n"
-                    "• **Spectre d'Amplitude** : Calculé par FFT avec fenêtrage de **Hanning** pour limiter les fuites spectrales (*spectral leakage*).\n"
-                    "• **Fréquence Maximale de Nyquist** : $f_{max} = \\frac{F_s}{2} = 6\\,000\\,\\text{Hz}$ (respect du théorème de Shannon-Nyquist).\n"
+                    "• **Spectre d'Amplitude** : Calculé par FFT avec fenêtrage de **Hanning** pour éliminer les fuites spectrales.\n"
+                    "• **Fréquence de Nyquist** : f_max = Fs / 2 = 6 000 Hz (respect du théorème de Shannon-Nyquist).\n"
                     "• **Métriques Spectrales** : Énergie spectrale totale, Centroïde spectral (barycentre), Fréquence dominante et Écart-type spectral."
                 ),
                 "sources": [{"doc_id": "D3_guide_caracteristiques_vibratoires.md", "score": 0.96}, {"doc_id": "D9_theorie_traitement_signal.md", "score": 0.95}]
